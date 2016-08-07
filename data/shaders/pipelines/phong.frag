@@ -13,6 +13,9 @@ layout (location = 4) in vec3 inLightVec;
 
 layout (location = 0) out vec4 outFragColor;
 
+layout (constant_id = 0)  const int sType = 0;
+layout (constant_id = 1)  const bool const2 = false;
+
 void main() 
 {
 	// Desaturate color
@@ -25,6 +28,32 @@ void main()
 	vec3 V = normalize(inViewVec);
 	vec3 R = reflect(-L, N);
 	vec3 diffuse = max(dot(N, L), 0.0) * color;
-	vec3 specular = pow(max(dot(R, V), 0.0), 32.0) * vec3(0.35);
-	outFragColor = vec4(ambient + diffuse * 1.75 + specular, 1.0);		
+	vec3 specular;
+
+	if (sType == 0) 
+	{
+		specular = pow(max(dot(R, V), 0.0), 32.0) * vec3(0.35);
+		outFragColor = vec4(ambient + diffuse * 1.75 + specular, 1.0);	
+
+	} 
+	else if (sType == 1) 
+	{
+		specular = pow(max(dot(R, V), 0.0), 16.0) * vec3(0.75);		
+
+		outFragColor = vec4(ambient + diffuse * 1.75 + specular, 1.0);		
+	
+		float intensity = dot(N,L);
+		float shade = 1.0;
+		shade = intensity < 0.5 ? 0.75 : shade;
+		shade = intensity < 0.35 ? 0.6 : shade;
+		shade = intensity < 0.25 ? 0.5 : shade;
+		shade = intensity < 0.1 ? 0.25 : shade;
+
+		outFragColor.rgb = inColor * 3.0 * shade;
+	}
+	else 
+	{
+		outFragColor.rgb = inNormal * 1.5;
+		
+	}
 }

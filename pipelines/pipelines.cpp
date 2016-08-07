@@ -360,22 +360,19 @@ public:
 		pipelineCreateInfo.pStages = shaderStages.data();
 
 		// test for specialization entries
-		VkSpecializationMapEntry specialization_entries[2];
+		VkSpecializationMapEntry specialization_entries[1];
 		specialization_entries[0].constantID = 0;
 		specialization_entries[0].offset = 0;
 		specialization_entries[0].size = 4;
-		specialization_entries[1].constantID = 1;
-		specialization_entries[1].offset = 4;
-		specialization_entries[1].size = 4;
 
-		uint32_t specialization_data[2];
+		uint32_t specialization_data[1];
 		specialization_data[0] = 0;
-		specialization_data[1] = 0;
+		
 
 		VkSpecializationInfo specialization_info;
-		specialization_info.mapEntryCount = 2;
+		specialization_info.mapEntryCount = 1;
 		specialization_info.pMapEntries = specialization_entries;
-		specialization_info.dataSize = 8;
+		specialization_info.dataSize = 4;
 		specialization_info.pData = specialization_data;
 
 		shaderStages[1].pSpecializationInfo = &specialization_info;
@@ -400,11 +397,9 @@ public:
 
 		// Toon shading pipeline
 		shaderStages[0] = loadShader(getAssetPath() + "shaders/pipelines/toon.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-		shaderStages[1] = loadShader(getAssetPath() + "shaders/pipelines/toon.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-		//shaderStages[1].pSpecializationInfo = &specialization_info;
+		shaderStages[1].pSpecializationInfo = &specialization_info;
 
-		specialization_data[0] = 0;
-		specialization_data[1] = 1;
+		specialization_data[0] = 1;		
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.toon));
 
 		// Non solid rendering is not a mandatory Vulkan feature
@@ -413,10 +408,10 @@ public:
 			// Pipeline for wire frame rendering
 			rasterizationState.polygonMode = VK_POLYGON_MODE_LINE;
 			shaderStages[0] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-			shaderStages[1] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+			//shaderStages[1] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
 			shaderStages[1].pSpecializationInfo = &specialization_info;
-			specialization_data[0] = 1;
-			specialization_data[1] = 1;
+			specialization_data[0] = 2;
+			
 			VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.wireframe));
 		}
 	}
