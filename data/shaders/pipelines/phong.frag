@@ -53,7 +53,7 @@ void main()
 	}
 	else 
 	{
-		outFragColor.rgb = inNormal * 1.5;
+		outFragColor.rgb = inColor * 1.5;
 		
 	}
 }

@@ -375,6 +375,7 @@ public:
 		specialization_info.dataSize = 4;
 		specialization_info.pData = specialization_data;
 
+		shaderStages[0].pSpecializationInfo = &specialization_info;
 		shaderStages[1].pSpecializationInfo = &specialization_info;
 
 
@@ -395,10 +396,6 @@ public:
 		// As we use the handle, we must set the index to -1 (see section 9.5 of the specification)
 		pipelineCreateInfo.basePipelineIndex = -1;
 
-		// Toon shading pipeline
-		shaderStages[0] = loadShader(getAssetPath() + "shaders/pipelines/toon.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-		shaderStages[1].pSpecializationInfo = &specialization_info;
-
 		specialization_data[0] = 1;		
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.toon));
 
@@ -407,9 +404,8 @@ public:
 		{
 			// Pipeline for wire frame rendering
 			rasterizationState.polygonMode = VK_POLYGON_MODE_LINE;
-			shaderStages[0] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-			//shaderStages[1] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-			shaderStages[1].pSpecializationInfo = &specialization_info;
+			//shaderStages[0] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+			//shaderStages[1] = loadShader(getAssetPath() + "shaders/pipelines/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);			
 			specialization_data[0] = 2;
 			
 			VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.wireframe));

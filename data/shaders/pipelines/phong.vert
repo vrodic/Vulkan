@@ -21,6 +21,9 @@ layout (location = 2) out vec2 outUV;
 layout (location = 3) out vec3 outViewVec;
 layout (location = 4) out vec3 outLightVec;
 
+
+layout (constant_id = 0)  const int sType = 0;
+
 out gl_PerVertex
 {
 	vec4 gl_Position;
@@ -28,6 +31,14 @@ out gl_PerVertex
 
 void main() 
 {
+	if (sType == 2)
+	{
+		outColor = inColor;		
+		gl_Position = ubo.projection * ubo.model * vec4(inPos, 1.0);
+		return;
+	}
+
+	
 	outNormal = inNormal;
 	outColor = inColor;
 	outUV = inUV;
@@ -37,5 +48,6 @@ void main()
 	outNormal = mat3(ubo.model) * inNormal;
 	vec3 lPos = mat3(ubo.model) * ubo.lightPos.xyz;
 	outLightVec = lPos - pos.xyz;
-	outViewVec = -pos.xyz;		
+	outViewVec = -pos.xyz;			
+	
 }
